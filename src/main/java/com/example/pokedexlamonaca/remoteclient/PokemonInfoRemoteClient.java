@@ -1,20 +1,40 @@
 package com.example.pokedexlamonaca.remoteclient;
 
+import com.example.pokedexlamonaca.model.excpetion.PokemonNotFoundException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
 @Service
 public class PokemonInfoRemoteClient {
+    private final String BASE_URL = "https://pokeapi.co/api/v2/";
+    private final RestClient restClient = RestClient.create();
+
     public PokemonInfo getPokemonInfo(String pokemonName) {
-        return null;
+        return restClient
+                .get()
+                .uri(BASE_URL + "pokemon/{pokemonName}", pokemonName)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    throw new PokemonNotFoundException(response.getStatusCode());
+                })
+                .body(PokemonInfo.class);
     }
 
-    public PokemonSpecies getPokemonSpecies(String pokemonId) {
-        return null;
+    public PokemonSpecies getPokemonSpecies(String pokemonSpeciesUrl) {
+        return restClient
+                .get()
+                .uri(pokemonSpeciesUrl)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    throw new PokemonNotFoundException(response.getStatusCode());
+                })
+                .body(PokemonSpecies.class);
     }
 
     @Getter
