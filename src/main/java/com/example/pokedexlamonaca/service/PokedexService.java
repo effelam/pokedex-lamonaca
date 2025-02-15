@@ -1,5 +1,6 @@
 package com.example.pokedexlamonaca.service;
 
+import com.example.pokedexlamonaca.factory.PokemonInfoFactory;
 import com.example.pokedexlamonaca.model.PokemonInfo;
 import com.example.pokedexlamonaca.remoteclient.PokemonInfoRemoteClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +15,7 @@ public class PokedexService {
     public PokemonInfo getPokemonInfo(String pokemonName) {
         PokemonInfoRemoteClient.PokemonInfo remoteInfo = pokemonInfoRemoteClient.getPokemonInfo(pokemonName);
         PokemonInfoRemoteClient.PokemonSpecies species = pokemonInfoRemoteClient.getPokemonSpecies(remoteInfo.getSpecies().getUrl());
-        return PokemonInfo.builder()
-                .name(remoteInfo.getSpecies().getName())
-                .pokedexEntry(species.getFlavourTextEntryList().stream()
-                        .filter(ft -> ft.getLanguage().getName().equals("en"))
-                        .findFirst()
-                        .map(PokemonInfoRemoteClient.FlavourTextEntry::getFlavourText)
-                        .orElse("No pokedex entry available in english")
-                )
-                .habitat(species.getHabitat().getName())
-                .isLegendary(species.getIsLegendary())
-                .build();
+        return PokemonInfoFactory.createPokemonInfoFromRemote(remoteInfo, species);
     }
 
     public PokemonInfo getPokemonInfoTranslated(String pokemonName) {
