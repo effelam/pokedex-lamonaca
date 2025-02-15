@@ -1,7 +1,7 @@
 package com.example.pokedexlamonaca.factory;
 
 import com.example.pokedexlamonaca.model.PokemonInfo;
-import com.example.pokedexlamonaca.remoteclient.PokemonInfoRemoteClient;
+import com.example.pokedexlamonaca.remoteclient.PokeApiRemoteClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,11 +12,11 @@ public class PokemonInfoFactoryTest {
     @Test
     public void testCreatePokemonInfo() {
         //Setup
-        PokemonInfoRemoteClient.PokemonInfo pokemonInfo = buildPokemonInfo();
-        PokemonInfoRemoteClient.PokemonSpecies pokemonSpecies = buildPokemonSpecies("en");
+        PokeApiRemoteClient.PokemonBasicInfo pokemonBasicInfo = buildPokemonBasicInfo();
+        PokeApiRemoteClient.PokemonDetails pokemonDetails = buildPokemonDetails("en");
 
         //Execute
-        PokemonInfo result = PokemonInfoFactory.createPokemonInfoFromRemote(pokemonInfo, pokemonSpecies);
+        PokemonInfo result = PokemonInfoFactory.createPokemonInfoFromRemote(pokemonBasicInfo, pokemonDetails);
 
         //Verify
         Assertions.assertEquals("pokemonName", result.getName());
@@ -28,11 +28,11 @@ public class PokemonInfoFactoryTest {
     @Test
     public void testCreatePokemonInfoNoEngFlavourText() {
         //Setup
-        PokemonInfoRemoteClient.PokemonInfo pokemonInfo = buildPokemonInfo();
-        PokemonInfoRemoteClient.PokemonSpecies pokemonSpecies = buildPokemonSpecies("it");
+        PokeApiRemoteClient.PokemonBasicInfo pokemonBasicInfo = buildPokemonBasicInfo();
+        PokeApiRemoteClient.PokemonDetails pokemonDetails = buildPokemonDetails("it");
 
         //Execute
-        PokemonInfo result = PokemonInfoFactory.createPokemonInfoFromRemote(pokemonInfo, pokemonSpecies);
+        PokemonInfo result = PokemonInfoFactory.createPokemonInfoFromRemote(pokemonBasicInfo, pokemonDetails);
 
         //Verify
         Assertions.assertEquals("pokemonName", result.getName());
@@ -41,29 +41,29 @@ public class PokemonInfoFactoryTest {
         Assertions.assertTrue(result.getIsLegendary());
     }
 
-    private PokemonInfoRemoteClient.PokemonInfo buildPokemonInfo() {
-        PokemonInfoRemoteClient.PokemonInfo pokemonInfo = new PokemonInfoRemoteClient.PokemonInfo();
-        pokemonInfo.setId("pokemonId");
-        PokemonInfoRemoteClient.Species species = new PokemonInfoRemoteClient.Species();
+    private PokeApiRemoteClient.PokemonBasicInfo buildPokemonBasicInfo() {
+        PokeApiRemoteClient.PokemonBasicInfo pokemonBasicInfo = new PokeApiRemoteClient.PokemonBasicInfo();
+        pokemonBasicInfo.setId("pokemonId");
+        PokeApiRemoteClient.RemoteObject species = new PokeApiRemoteClient.RemoteObject();
         species.setName("pokemonName");
         species.setUrl("pokemonUrl");
-        pokemonInfo.setSpecies(species);
-        return pokemonInfo;
+        pokemonBasicInfo.setInfo(species);
+        return pokemonBasicInfo;
     }
 
-    private PokemonInfoRemoteClient.PokemonSpecies buildPokemonSpecies(String languageName) {
-        PokemonInfoRemoteClient.PokemonSpecies pokemonSpecies = new PokemonInfoRemoteClient.PokemonSpecies();
-        PokemonInfoRemoteClient.FlavourTextEntry flavourTextEntry = new PokemonInfoRemoteClient.FlavourTextEntry();
+    private PokeApiRemoteClient.PokemonDetails buildPokemonDetails(String languageName) {
+        PokeApiRemoteClient.PokemonDetails pokemonDetails = new PokeApiRemoteClient.PokemonDetails();
+        PokeApiRemoteClient.FlavourTextEntry flavourTextEntry = new PokeApiRemoteClient.FlavourTextEntry();
         flavourTextEntry.setFlavourText("flavourText");
-        PokemonInfoRemoteClient.Language language = new PokemonInfoRemoteClient.Language();
+        PokeApiRemoteClient.RemoteObject language = new PokeApiRemoteClient.RemoteObject();
         language.setName(languageName);
         language.setUrl("languageUrl");
         flavourTextEntry.setLanguage(language);
-        pokemonSpecies.setFlavourTextEntryList(Collections.singletonList(flavourTextEntry));
-        PokemonInfoRemoteClient.Habitat habitat = new PokemonInfoRemoteClient.Habitat();
+        pokemonDetails.setFlavourTextEntryList(Collections.singletonList(flavourTextEntry));
+        PokeApiRemoteClient.RemoteObject habitat = new PokeApiRemoteClient.RemoteObject();
         habitat.setName("habitatName");
-        pokemonSpecies.setHabitat(habitat);
-        pokemonSpecies.setIsLegendary(true);
-        return pokemonSpecies;
+        pokemonDetails.setHabitat(habitat);
+        pokemonDetails.setIsLegendary(true);
+        return pokemonDetails;
     }
 }

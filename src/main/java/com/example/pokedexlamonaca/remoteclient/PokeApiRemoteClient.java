@@ -11,11 +11,11 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Service
-public class PokemonInfoRemoteClient {
+public class PokeApiRemoteClient {
     private final String BASE_URL = "https://pokeapi.co/api/v2/";
     private final RestClient restClient = RestClient.create();
 
-    public PokemonInfo getPokemonInfo(String pokemonName) {
+    public PokemonBasicInfo getPokemonBasicInfo(String pokemonName) {
         return restClient
                 .get()
                 .uri(BASE_URL + "pokemon/{pokemonName}", pokemonName)
@@ -23,40 +23,33 @@ public class PokemonInfoRemoteClient {
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
                     throw new PokemonNotFoundException(response.getStatusCode());
                 })
-                .body(PokemonInfo.class);
+                .body(PokemonBasicInfo.class);
     }
 
-    public PokemonSpecies getPokemonSpecies(String pokemonSpeciesUrl) {
+    public PokemonDetails getPokemonDetails(String pokemonDetailsUrl) {
         return restClient
                 .get()
-                .uri(pokemonSpeciesUrl)
+                .uri(pokemonDetailsUrl)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
                     throw new PokemonNotFoundException(response.getStatusCode());
                 })
-                .body(PokemonSpecies.class);
+                .body(PokemonDetails.class);
     }
 
     @Getter
     @Setter
-    public static class PokemonInfo {
+    public static class PokemonBasicInfo {
         private String id;
-        private Species species;
+        private RemoteObject info;
     }
 
     @Getter
     @Setter
-    public static class Species {
-        private String name;
-        private String url;
-    }
-
-    @Getter
-    @Setter
-    public static class PokemonSpecies {
+    public static class PokemonDetails {
         @JsonProperty("flavor_text_entries")
         private List<FlavourTextEntry> flavourTextEntryList;
-        private Habitat habitat;
+        private RemoteObject habitat;
         @JsonProperty("is_legendary")
         private Boolean isLegendary;
     }
@@ -66,27 +59,13 @@ public class PokemonInfoRemoteClient {
     public static class FlavourTextEntry {
         @JsonProperty("flavor_text")
         private String flavourText;
-        private Language language;
-        private Version version;
+        private RemoteObject language;
+        private RemoteObject version;
     }
 
     @Getter
     @Setter
-    public static class Language {
-        private String name;
-        private String url;
-    }
-
-    @Getter
-    @Setter
-    public static class Version {
-        private String name;
-        private String url;
-    }
-
-    @Getter
-    @Setter
-    public static class Habitat {
+    public static class RemoteObject {
         private String name;
         private String url;
     }
