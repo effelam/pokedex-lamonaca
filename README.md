@@ -28,12 +28,12 @@ code with useless piece of data but in a production application I think that all
 users could want them too.
 
 Second point, in PokeApiRemoteClient (and in the FunTranslatorRemoteClient) class there is a static string that
-represent the base path of PokeApi apis (Funtranslations api for the other client). For now that string is used only once
+represent the base path of PokeApi apis (Funtranslations base path for the other client). For now that string is used only once
 but in production we could implement other api from the same base path and so putting it as a static resource would reduce
 repetitions.
 
-As third and final point is the different behaviour between getPokemonBasicInfo and getPokemonDetails functions. First function
-take as an input pokemonName (and use it as a pathVariable) on the contrary getPokemonDetails take as an input full url.
+As third and final point there is a different behaviour between getPokemonBasicInfo and getPokemonDetails functions. First function
+takes as an input pokemonName (and use it as a pathVariable) on the contrary getPokemonDetails takes as an input a full url.
 There were two different ways to implement this. The other one was to make it take as an input only the PokemonId (returned
 by getPokemonBasicInfo) and make getPokemonDetails build the url using the base PokeApi path. This second approach could make
 the function more flexible (you don't need full url but only the Pokemon id) but if for some reason PokeApi decides to change
@@ -41,8 +41,8 @@ that api url we need to change it. For now I decided to be more robust against a
 nice solution too.
 
 ### FindTranslationNameHelper
-This project requirements was that for the Pokedex Entry translation we should use the Yoda one if the Pokemon is legendary
-or its habitat is a cave, Shakespeare one otherwise. Obviously for a requirement so simple an if-else statement is sufficient
+This project requirements was that for the Pokedex entry translation we should use the Yoda one if the Pokemon is legendary
+or its habitat is a cave, Shakespeare one otherwise. Obviously for a requirement this simple an if-else statement is sufficient
 but in a production environment there could be way more habitat-translation couple. In order to make code cleaner and more
 maintainable a map habitat - translation is introduced and an helper class read it and return the proper value (or the default
 one if no translation is found). Adding a new habitat-translation couple means only adding that couple to map builder, without
@@ -50,5 +50,5 @@ adding new if statement to code.
 
 ### PokemonInfoFactory
 PokeApi https://pokeapi.co/api/v2/pokemon-species/{pokemon-id} returns a list of flavor_text_entries for each game where
-Pokemon is present and for each supported language. There were no specifications about which entry to get, so for simplicity
+that Pokemon is present and for each supported language. There were no specifications about which entry to return, so for simplicity
 I return the first english one. Getting one from a specific game is trivial if needed.
