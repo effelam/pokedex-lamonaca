@@ -1,6 +1,7 @@
 package com.example.pokedexlamonaca.remoteclient;
 
-import com.example.pokedexlamonaca.model.excpetion.PokemonNotFoundException;
+import com.example.pokedexlamonaca.model.exception.PokemonNotFoundException;
+import com.example.pokedexlamonaca.model.exception.WrongPokemonDetailsUrlException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,8 @@ public class PokeApiRemoteClientTest {
         //Verify
         Assertions.assertNotNull(result);
         Assertions.assertEquals("41", result.getId());
-        Assertions.assertNotNull(result.getInfo());
-        Assertions.assertEquals("zubat", result.getInfo().getName());
+        Assertions.assertNotNull(result.getSpecies());
+        Assertions.assertEquals("zubat", result.getSpecies().getName());
     }
 
     @Test
@@ -53,7 +54,7 @@ public class PokeApiRemoteClientTest {
         //Execute
 
         //Verify
-        Assertions.assertThrows(PokemonNotFoundException.class, () -> pokeApiRemoteClient.getPokemonBasicInfo("https://pokeapi.co/api/v2/pokemon-species/pippo"));
+        Assertions.assertThrows(WrongPokemonDetailsUrlException.class, () -> pokeApiRemoteClient.getPokemonDetails("https://pokeapi.co/api/v2/pokemon-species/pippo"));
     }
 
 }

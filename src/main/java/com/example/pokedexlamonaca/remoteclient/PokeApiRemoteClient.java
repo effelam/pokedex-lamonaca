@@ -1,6 +1,7 @@
 package com.example.pokedexlamonaca.remoteclient;
 
-import com.example.pokedexlamonaca.model.excpetion.PokemonNotFoundException;
+import com.example.pokedexlamonaca.model.exception.PokemonNotFoundException;
+import com.example.pokedexlamonaca.model.exception.WrongPokemonDetailsUrlException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class PokeApiRemoteClient {
                 .uri(BASE_URL + "pokemon/{pokemonName}", pokemonName)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new PokemonNotFoundException(response.getStatusCode());
+                    throw new PokemonNotFoundException(pokemonName);
                 })
                 .body(PokemonBasicInfo.class);
     }
@@ -32,7 +33,7 @@ public class PokeApiRemoteClient {
                 .uri(pokemonDetailsUrl)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new PokemonNotFoundException(response.getStatusCode());
+                    throw new WrongPokemonDetailsUrlException(pokemonDetailsUrl);
                 })
                 .body(PokemonDetails.class);
     }
@@ -41,7 +42,7 @@ public class PokeApiRemoteClient {
     @Setter
     public static class PokemonBasicInfo {
         private String id;
-        private RemoteObject info;
+        private RemoteObject species;
     }
 
     @Getter
