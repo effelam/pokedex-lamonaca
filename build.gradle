@@ -31,6 +31,14 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.example.pokedexlamonaca.PokedexLamonacaApplication'
+        )
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
