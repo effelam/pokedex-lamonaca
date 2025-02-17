@@ -47,7 +47,7 @@ public class PokemonInfoFactoryTest {
         PokeApiRemoteClient.RemoteObject species = new PokeApiRemoteClient.RemoteObject();
         species.setName("pokemonName");
         species.setUrl("pokemonUrl");
-        pokemonBasicInfo.setInfo(species);
+        pokemonBasicInfo.setSpecies(species);
         return pokemonBasicInfo;
     }
 
