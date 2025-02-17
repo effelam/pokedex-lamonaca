@@ -1,7 +1,6 @@
 package com.example.pokedexlamonaca.remoteclient;
 
 import com.example.pokedexlamonaca.model.exception.WrongTranslationNameException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpHeaders;
@@ -38,11 +37,6 @@ public class FunTranslatorRemoteClient {
     @Setter
     public static class FunTranslation {
         private Content contents;
-    }
-
-    @AllArgsConstructor
-    private static class TextToTranslate {
-        private String text;
     }
 
     @Getter

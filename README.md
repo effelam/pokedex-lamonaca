@@ -16,8 +16,8 @@ App listens to 8080 port, so please make sure it is open to use. You can go to:
 Feel free to change Pokemon name at the end of url in order to have other Pokemon info.
 
 ## Some considerations
-There are some design choices that seem strange with the limited domain of this application but could be useful in a 
-proper production application. I highlight some of them class by class.
+There are some design choices that I would like to discuss as in such a limited application domain they fail to show the 
+same potential that they could have in a production environment. I highlight some of them class by class.
 
 ### PokeApiRemoteClient.class
 This class is responsible to call PokeApi and return the proper response. There are some design choice that I want to discuss.
